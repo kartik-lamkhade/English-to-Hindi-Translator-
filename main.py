@@ -5,9 +5,9 @@ import streamlit as st
 import json
 model = keras.models.load_model("model2.keras")
 with open("tokenizer_in2.json" , 'r') as f:
-    tokenizer_in = tokenizer_from_json(json.lode(f))
+    tokenizer_in = tokenizer_from_json(json.load(f))
 with open("tokenizer_out2.json" , 'r') as f1:
-    tokenizer_out = tokenizer_from_json(json.read(f1))
+    tokenizer_out = tokenizer_from_json(json.load(f1))
 st.title("English to Hindi Translator 🌍➡️🇮🇳")
 
 text = st.text_input("ENTER HERE")
