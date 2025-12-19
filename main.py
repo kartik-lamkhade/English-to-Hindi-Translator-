@@ -13,33 +13,34 @@ st.title("English to Hindi Translator 🌍➡️🇮🇳")
 text = st.text_input("ENTER HERE")
 
 if st.button("predict"):
-    def prepare_input(sentence, tokenizer, max_len):
-        seq = tokenizer.texts_to_sequences([sentence])
-        seq = pad_sequences(seq, maxlen=max_len, padding="post")
-        return seq
+    def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
     import numpy as np
-    def translate_simple(sentence, model, tokenizer_in, tokenizer_out):
 
-        sentence = "<start> " + sentence + " <end>"
+    sentence = "<start> " + sentence + " <end>"
+    enc_input = pad_sequences(
+        tokenizer_in.texts_to_sequences([sentence]), maxlen=max_len, padding="post"
+    )
 
-        enc_input = prepare_input(sentence, tokenizer_in, 20)
+    # Start decoding
+    start_id = tokenizer_out.word_index["<start>"]
+    dec_input = [start_id]
+    result = []
 
-        start_id = tokenizer_out.word_index["start"]
-        dec_input = np.zeros((1, 19))
-        dec_input[0, 0] = start_id
+    for _ in range(max_len):
+        # Pad decoder input
+        dec_input_padded = pad_sequences([dec_input], maxlen=max_len-1, padding="post")
+        preds = model.predict([enc_input, dec_input_padded], verbose=0)
+        next_id = np.argmax(preds[0, len(dec_input)-1, :])
 
-        preds = model.predict([enc_input, dec_input])
+        if next_id == tokenizer_out.word_index["<end>"]:
+            break
 
-        word_ids = np.argmax(preds[0], axis=-1)
+        word = tokenizer_out.index_word.get(next_id, "")
+        if word != "":
+            result.append(word)
 
-        result = []
-        for wid in word_ids:
-            word = tokenizer_out.index_word.get(wid, "")
-            if word == "<end>":
-                break
-            if word not in ["<start>", ""]:
-                result.append(word)
+        dec_input.append(next_id)
 
-        return " ".join(result)
+    return " ".join(result)
 
     st.success(translate_simple(text,model,tokenizer_in,tokenizer_out))
