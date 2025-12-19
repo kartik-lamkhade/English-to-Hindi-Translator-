@@ -16,15 +16,15 @@ text = st.text_input("ENTER HERE")
 
 if st.button("predict"):
     def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
-    sentence = "<start> " + sentence + " <end>"
-    enc_input = pad_sequences(
-        tokenizer_in.texts_to_sequences([sentence]), maxlen=max_len, padding="post"
-    )
-
-    # Start decoding
-    start_id = tokenizer_out.word_index["<start>"]
-    dec_input = [start_id]
-    result = []
+        sentence = "<start> " + sentence + " <end>"
+        enc_input = pad_sequences(
+            tokenizer_in.texts_to_sequences([sentence]), maxlen=max_len, padding="post"
+        )
+    
+        # Start decoding
+        start_id = tokenizer_out.word_index["<start>"]
+        dec_input = [start_id]
+        result = []
 
     for _ in range(max_len):
         # Pad decoder input
