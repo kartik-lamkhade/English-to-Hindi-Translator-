@@ -22,7 +22,7 @@ def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
     )
 
     # Start decoding
-    start_id = tokenizer_out.word_index["<start>"]
+    start_id = tokenizer_out.word_index["start"]
     dec_input = [start_id]
     result = []
 
@@ -32,7 +32,7 @@ def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
         preds = model.predict([enc_input, dec_input_padded], verbose=0)
         next_id = np.argmax(preds[0, len(dec_input)-1, :])
     
-        if next_id == tokenizer_out.word_index["<end>"]:
+        if next_id == tokenizer_out.word_index["end"]:
             break
     
         word = tokenizer_out.index_word.get(next_id, "")
