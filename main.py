@@ -5,12 +5,23 @@ import streamlit as st
 import json
 import numpy as np
 
-model = keras.models.load_model("model2.keras")  
-with open("tokenizer_in2.json" , 'r') as f:
-    tokenizer_in = tokenizer_from_json(f.read().strip())
-with open("tokenizer_out2.json" , 'r') as f1:
-    tokenizer_out = tokenizer_from_json(f1.read().strip())
+@st.cache_resource
+def load_model():
+    from tensorflow import keras
+    model = keras.models.load_model("model2.keras")
+    return model
+
+model = load_model()
+
 st.title("English to Hindi Translator 🌍➡️🇮🇳")
+@st.cache_resource
+def load_tokenizer(path):
+    from tensorflow.keras.preprocessing.text import tokenizer_from_json
+    with open(path, 'r', encoding='utf-8') as f:
+        return tokenizer_from_json(f.read().strip())
+tokenizer_in = load_tokenizer("tokenizer_in2.json")
+tokenizer_out = load_tokenizer("tokenizer_out2.json")
+
 
 text = st.text_input("ENTER HERE")
 
