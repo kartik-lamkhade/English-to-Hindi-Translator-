@@ -41,6 +41,6 @@ if st.button("predict"):
 
         dec_input.append(next_id)
 
-    return " ".join(result)
+        return " ".join(result)
 
     st.success(translate_simple(text,model,tokenizer_in,tokenizer_out))
