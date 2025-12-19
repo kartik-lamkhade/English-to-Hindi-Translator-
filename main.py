@@ -3,6 +3,8 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import streamlit as st
 import json
+import numpy as np
+
 model = keras.models.load_model("model2.keras")
 with open("tokenizer_in2.json" , 'r') as f:
     tokenizer_in = tokenizer_from_json(f.read().strip())
@@ -14,8 +16,6 @@ text = st.text_input("ENTER HERE")
 
 if st.button("predict"):
     def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
-    import numpy as np
-
     sentence = "<start> " + sentence + " <end>"
     enc_input = pad_sequences(
         tokenizer_in.texts_to_sequences([sentence]), maxlen=max_len, padding="post"
