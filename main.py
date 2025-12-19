@@ -43,4 +43,4 @@ def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
     
     return " ".join(result)
 if st.button("predict"):
-    st.success(translate_simple(text,model,tokenizer_in,tokenizer_out))
+    st.success(translate_simple(text, model, tokenizer_in, tokenizer_out))
