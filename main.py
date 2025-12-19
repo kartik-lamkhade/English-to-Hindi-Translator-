@@ -26,21 +26,21 @@ def translate_simple(sentence, model, tokenizer_in, tokenizer_out, max_len=20):
     dec_input = [start_id]
     result = []
 
-for _ in range(max_len):
-    # Pad decoder input
-    dec_input_padded = pad_sequences([dec_input], maxlen=max_len-1, padding="post")
-    preds = model.predict([enc_input, dec_input_padded], verbose=0)
-    next_id = np.argmax(preds[0, len(dec_input)-1, :])
-
-    if next_id == tokenizer_out.word_index["<end>"]:
-        break
-
-    word = tokenizer_out.index_word.get(next_id, "")
-    if word != "":
-        result.append(word)
-
-    dec_input.append(next_id)
-
-return " ".join(result)
+    for _ in range(max_len):
+        # Pad decoder input
+        dec_input_padded = pad_sequences([dec_input], maxlen=max_len-1, padding="post")
+        preds = model.predict([enc_input, dec_input_padded], verbose=0)
+        next_id = np.argmax(preds[0, len(dec_input)-1, :])
+    
+        if next_id == tokenizer_out.word_index["<end>"]:
+            break
+    
+        word = tokenizer_out.index_word.get(next_id, "")
+        if word != "":
+            result.append(word)
+    
+        dec_input.append(next_id)
+    
+    return " ".join(result)
 if st.button("predict"):
     st.success(translate_simple(text,model,tokenizer_in,tokenizer_out))
